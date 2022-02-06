@@ -37,7 +37,7 @@ from .tools import Config
 def parse_arguments():
 
     parser = argparse.ArgumentParser(
-        description="Gyre Grafana cloud integration service.",
+        description="A webservice with pre-defined behavior.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
