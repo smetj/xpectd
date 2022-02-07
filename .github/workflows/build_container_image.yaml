@@ -11,6 +11,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      -
         name: Docker meta
         id: meta
         uses: docker/metadata-action@v3
