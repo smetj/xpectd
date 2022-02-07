@@ -1,6 +1,10 @@
+name: "Bump version and tag"
 on:
-  push:
-    branches: [ main ]
+  workflow_run:
+    workflows: ["Run Tests"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   tag:
