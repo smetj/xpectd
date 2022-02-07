@@ -1,23 +1,16 @@
-name: build container
+name: "Build and publish container"
 
 on:
-  push:
-    branches:
-      - '**'
-    tags:
-      - 'v*.*.*'
-  pull_request:
-    branches:
-      - 'main'
+  workflow_run:
+    workflows: ["Bump version and tag"]
+    branches: [main]
+    types:
+      - completed
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v2
-      -
         name: Docker meta
         id: meta
         uses: docker/metadata-action@v3
@@ -27,8 +20,6 @@ jobs:
             smetj/xpectd
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
