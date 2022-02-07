@@ -29,7 +29,13 @@ import sys
 PROJECT = "xpectd"
 VERSION = "0.1.0"
 
-install_requires = ["falcon", "gunicorn", "croniter", "pyyaml", "jsonschema"]
+install_requires = [
+    "falcon==3.0.1",
+    "gunicorn==20.1.0",
+    "croniter==1.2.0",
+    "pyyaml==6.0",
+    "jsonschema==4.4.0",
+]
 
 dependency_links = []
 

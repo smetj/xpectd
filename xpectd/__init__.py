@@ -37,7 +37,7 @@ from .tools import Config
 def parse_arguments():
 
     parser = argparse.ArgumentParser(
-        description="A webservice with pre-defined behavior.",
+        description="A webservice to simulate various outage scenarios.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
