@@ -1,12 +1,16 @@
 # xpectd
 
-A webservice with pre-defined behavior
+A webservice to simulate various outage scenarios.
 
 ## Installation
 
 ```
-pip install xpectd
+python setup.py install
 ```
+
+## Docker images
+
+Docker builds can be found on [Dockerhub](https://hub.docker.com/r/smetj/xpectd)
 
 ## Usage
 
@@ -14,7 +18,7 @@ pip install xpectd
 xpectd --help
 usage: xpectd [-h] [--address ADDRESS] [--port PORT] [--workers WORKERS] [--threads THREADS] --plan PLAN
 
-Gyre Grafana cloud integration service.
+A webservice to simulate various outage scenarios.
 
 optional arguments:
   -h, --help         show this help message and exit
@@ -27,7 +31,7 @@ optional arguments:
 
 ## Example plan file
 
-```
+```yaml
 error_plan_1:
     outage_cron: "*/1 * * * *"
     outage_duration: 10
