@@ -32,6 +32,9 @@ from time import sleep
 from time import time
 from croniter import croniter
 from .tools import Config
+from gevent import monkey
+
+monkey.patch_all()
 
 
 def parse_arguments():
@@ -206,6 +209,7 @@ def main():
             "workers": args.workers,
             "accesslog": "-",
             "disable_redirect_access_to_syslog": True,
+            "worker_class": "gevent",
         },
     ).run()
 
