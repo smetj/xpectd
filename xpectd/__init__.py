@@ -138,11 +138,11 @@ class Outage:
         ):
             response = next(self.generate_responses)
             sleep(random.uniform(response["min_duration"], response["max_duration"]))
-            resp.body = response["payload"]
+            resp.text = response["payload"]
             resp.status = response["return_code"]
         else:
             sleep(random.uniform(self.nominal_min_duration, self.nominal_max_duration))
-            resp.body = self.nominal_payload
+            resp.text = self.nominal_payload
             resp.status = self.nominal_return_code
 
     def response_generator(self):
