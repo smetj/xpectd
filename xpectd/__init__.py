@@ -124,15 +124,16 @@ class Outage:
         self.nominal_max_duration = nominal_max_duration
 
         self.outage_enabled = False
+        self.generate_responses = self.response_generator()
 
-    def on_get(self, req, resp, action=None):
+    def on_get(self, req, resp):
         if (
             self.outage_enabled
             or time()
             - croniter(self.outage_cron, datetime.datetime.utcnow()).get_prev()
             <= self.outage_duration
         ):
-            response = next(self.get_response())
+            response = next(self.generate_responses)
             sleep(random.uniform(response["min_duration"], response["max_duration"]))
             resp.body = response["payload"]
             resp.status = response["return_code"]
@@ -141,16 +142,19 @@ class Outage:
             resp.body = self.nominal_payload
             resp.status = self.nominal_return_code
 
-    def get_response(self):
+    def response_generator(self):
         responses = []
         for entry in self.outage_response:
             responses += [entry for _ in range(entry["percentage"])]
         random.shuffle(responses)
 
-        while True:
-            for response in responses:
-                yield response
-            random.shuffle(responses)
+        def generate_responses():
+            while True:
+                for response in responses:
+                    yield response
+                random.shuffle(responses)
+
+        return generate_responses()
 
     def enable_outage(self):
         self.outage_enabled = True
