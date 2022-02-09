@@ -12,6 +12,12 @@ python setup.py install
 
 Docker builds can be found on [Dockerhub](https://hub.docker.com/r/smetj/xpectd)
 
+```bash
+docker run -t -i -p 8080:8080 -v $(pwd)/test_plan.yml:/test_plan.yml smetj/xpectd:latest \
+  --address 0.0.0.0 \
+  --plan /test_plan.yml
+```
+
 ## Usage
 
 ```
@@ -32,24 +38,27 @@ optional arguments:
 ## Example plan file
 
 ```yaml
-error_plan_1:
-    outage_cron: "*/1 * * * *"
-    outage_duration: 10
-    outage_response:
-        - return_code: 200
-          percentage: 20
-          min_duration: 1
-          max_duration: 3
+scenarios:
+  - endpoint: scenario_one
+    response:
+      status: 200
+      payload: Hi there
+      min_time: 0
+      max_time: 0.3
+    outage:
+      schedule: "*/1 * * * *"
+      duration: 0
+      response:
+        - percentage: 20
+          status: 200
           payload: Hi there
-        - return_code: 500
-          percentage: 80
-          min_duration: 0
-          max_duration: 0
-          payload: Server backend error
-    nominal_return_code: 200
-    nominal_payload: Hi there
-    nominal_min_duration: 0
-    nominal_max_duration: 0.3
+          min_time: 1
+          max_time: 3
+        - percentage: 80
+          status: 500
+          payload: Server Error
+          min_time: 0
+          max_time: 0
 ```
 
 The above config file would create an URL `/error_plan_1` which can be polled
