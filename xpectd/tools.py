@@ -25,38 +25,52 @@
 import yaml
 from jsonschema import validate
 
-
 SCHEMA = {
     "type": "object",
-    "minProperties": 1,
-    "patternProperties": {
-        ".*": {
-            "type": "object",
-            "properties": {
-                "outage_cron": {"type": "string"},
-                "outage_duration": {"type": "number"},
-                "outage_response": {
-                    "type": "array",
-                    "minItems": 1,
-                    "contains": {
+    "properties": {
+        "scenarios": {
+            "type": "array",
+            "minItems": 1,
+            "contains": {
+                "type": "object",
+                "properties": {
+                    "endpoint": {"type": "string"},
+                    "response": {
                         "type": "object",
                         "properties": {
-                            "return_code": {"type": "number"},
-                            "percentage": {"type": "number"},
-                            "min_duration": {"type": "number"},
-                            "max_duration": {"type": "number"},
+                            "status": {"type": "number"},
                             "payload": {"type": "string"},
+                            "min_time": {"type": "number"},
+                            "max_time": {"type": "number"},
                         },
                         "additionalProperties": False,
                     },
+                    "outage": {
+                        "type": "object",
+                        "properties": {
+                            "schedule": {"type": "string"},
+                            "duration": {"type": "number"},
+                            "response": {
+                                "type": "array",
+                                "minItems": 1,
+                                "contains": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {"type": "number"},
+                                        "percentage": {"type": "number"},
+                                        "payload": {"type": "string"},
+                                        "min_time": {"type": "number"},
+                                        "max_time": {"type": "number"},
+                                    },
+                                    "additionalProperties": False,
+                                },
+                            },
+                        },
+                    },
                 },
-                "nominal_return_code": {"type": "number"},
-                "nominal_payload": {"type": "string"},
-                "nominal_min_duration": {"type": "number"},
-                "nominal_max_duration": {"type": "number"},
             },
-            "additionalProperties": False,
-        }
+        },
+        "additionalProperties": False,
     },
 }
 
@@ -77,11 +91,11 @@ class Config:
 
     def validation(self, config):
 
-        for plan, content in config.items():
+        for scenario in config["scenarios"]:
             total_spread = sum(
-                [entry["percentage"] for entry in content["outage_response"]]
+                [entry["percentage"] for entry in scenario["outage"]["response"]]
             )
             if total_spread != 100:
                 raise Exception(
-                    f"The total percentage of plan '{plan}' must be 100%. Currently at {total_spread}"
+                    f"The total percentage of plan '{scenario['endpoint']}' must be 100%. Currently at {total_spread}"
                 )

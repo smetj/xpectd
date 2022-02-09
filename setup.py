@@ -27,7 +27,7 @@ from setuptools.command.test import test as TestCommand
 import sys
 
 PROJECT = "xpectd"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 install_requires = [
     "falcon==3.0.1",
@@ -35,6 +35,7 @@ install_requires = [
     "croniter==1.2.0",
     "pyyaml==6.0",
     "jsonschema==4.4.0",
+    "gevent==21.12.0",
 ]
 
 dependency_links = []
