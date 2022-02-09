@@ -12,6 +12,12 @@ python setup.py install
 
 Docker builds can be found on [Dockerhub](https://hub.docker.com/r/smetj/xpectd)
 
+```bash
+docker run -t -i -p 8080:8080 -v $(pwd)/test_plan.yml:/test_plan.yml smetj/xpectd:latest \
+  --address 0.0.0.0 \
+  --plan /test_plan.yml
+```
+
 ## Usage
 
 ```
