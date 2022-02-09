@@ -30,6 +30,7 @@ jobs:
 
       - name: Docker build and push
         run: |
+          ls -lah
           tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           docker build -t smetj/xpectd:latest .
           docker tag smetj/xpectd:latest smetj/xpectd:$tag
