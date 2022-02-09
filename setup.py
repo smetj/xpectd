@@ -35,6 +35,7 @@ install_requires = [
     "croniter==1.2.0",
     "pyyaml==6.0",
     "jsonschema==4.4.0",
+    "gevent==21.12.0",
 ]
 
 dependency_links = []
