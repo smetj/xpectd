@@ -110,21 +110,21 @@ class Outage:
 
     def __init__(
         self,
-        outage_cron,
+        outage_schedule,
         outage_duration,
         outage_response,
-        nominal_return_code,
-        nominal_payload,
-        nominal_min_duration,
-        nominal_max_duration,
+        status,
+        payload,
+        min_time,
+        max_time,
     ):
-        self.outage_cron = outage_cron
+        self.outage_schedule = outage_schedule
         self.outage_duration = outage_duration
         self.outage_response = outage_response
-        self.nominal_return_code = nominal_return_code
-        self.nominal_payload = nominal_payload
-        self.nominal_min_duration = nominal_min_duration
-        self.nominal_max_duration = nominal_max_duration
+        self.status = status
+        self.payload = payload
+        self.min_time = min_time
+        self.max_time = max_time
 
         self.outage_enabled = False
         self.generate_responses = self.response_generator()
@@ -133,17 +133,17 @@ class Outage:
         if (
             self.outage_enabled
             or time()
-            - croniter(self.outage_cron, datetime.datetime.utcnow()).get_prev()
+            - croniter(self.outage_schedule, datetime.datetime.utcnow()).get_prev()
             <= self.outage_duration
         ):
-            response = next(self.generate_responses)
-            sleep(random.uniform(response["min_duration"], response["max_duration"]))
-            resp.text = response["payload"]
-            resp.status = response["return_code"]
+            response = next(self.get_response())
+            sleep(random.uniform(response["min_time"], response["max_time"]))
+            resp.body = response["payload"]
+            resp.status = response["status"]
         else:
-            sleep(random.uniform(self.nominal_min_duration, self.nominal_max_duration))
-            resp.text = self.nominal_payload
-            resp.status = self.nominal_return_code
+            sleep(random.uniform(self.min_time, self.max_time))
+            resp.body = self.payload
+            resp.status = self.status
 
     def response_generator(self):
         responses = []
@@ -189,15 +189,23 @@ def main():
     config = Config(args.plan).load()
 
     app = falcon.App(middleware=[])
-    for plan in config.keys():
+    for scenario in config["scenarios"]:
+        outage = Outage(
+            outage_schedule=scenario["outage"]["schedule"],
+            outage_duration=scenario["outage"]["duration"],
+            outage_response=scenario["outage"]["response"],
+            payload=scenario["response"]["payload"],
+            status=scenario["response"]["status"],
+            min_time=scenario["response"]["min_time"],
+            max_time=scenario["response"]["max_time"],
+        )
 
-        outage = Outage(**config[plan])
         app.add_route(
-            "/" + plan,
+            "/" + scenario["endpoint"],
             outage,
         )
         app.add_route(
-            "/" + plan + "/{action}",
+            "/" + scenario["endpoint"] + "/{action}",
             ToggleOutage(outage.enable_outage, outage.disable_outage),
         )
 
