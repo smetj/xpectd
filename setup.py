@@ -27,7 +27,7 @@ from setuptools.command.test import test as TestCommand
 import sys
 
 PROJECT = "xpectd"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 install_requires = [
     "falcon==3.0.1",
