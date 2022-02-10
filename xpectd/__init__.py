@@ -127,7 +127,7 @@ class Outage:
         self.max_time = max_time
 
         self.outage_enabled = False
-        self.generate_responses = self.response_generator()
+        self.generate_response = self.response_generator()
 
     def on_get(self, req, resp):
         if (
@@ -136,7 +136,7 @@ class Outage:
             - croniter(self.outage_schedule, datetime.datetime.utcnow()).get_prev()
             <= self.outage_duration
         ):
-            response = next(self.get_response())
+            response = next(self.generate_response)
             sleep(random.uniform(response["min_time"], response["max_time"]))
             resp.text = response["payload"]
             resp.status = response["status"]
