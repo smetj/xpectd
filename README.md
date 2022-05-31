@@ -21,18 +21,17 @@ docker run -t -i -p 8080:8080 -v $(pwd)/test_plan.yml:/test_plan.yml smetj/xpect
 ## Usage
 
 ```
-xpectd --help
-usage: xpectd [-h] [--address ADDRESS] [--port PORT] [--workers WORKERS] [--threads THREADS] --plan PLAN
+usage: xpectd [-h] [--address ADDRESS] [--port PORT] [--workers-connections WORKER_CONNECTIONS] --plan PLAN
 
 A webservice to simulate various outage scenarios.
 
 optional arguments:
-  -h, --help         show this help message and exit
-  --address ADDRESS  The IP to bind to. (default: 127.0.0.1)
-  --port PORT        The port to bind to. (default: 8080)
-  --workers WORKERS  The number of processes to run. (default: 1)
-  --threads THREADS  The number of threads per process. (default: 10)
-  --plan PLAN        The plan file to load. (default: None)
+  -h, --help            show this help message and exit
+  --address ADDRESS     The IP to bind to. (default: 127.0.0.1)
+  --port PORT           The port to bind to. (default: 8080)
+  --workers-connections WORKER_CONNECTIONS
+                        The maximum number of simultaneous clients. (default: 1000)
+  --plan PLAN           The plan file to load. (default: None)
 ```
 
 ## Example plan file
@@ -76,8 +75,5 @@ outage behaviour.
 ## Misc information
 
 - To disable a plan from being executed you can put `outage_duration` to `0`.
-- If you choose 2 or more workers resulting into multiple processes it will
-  throw off your percentages since clients will be connecting to the started
-  processes in a random fashion.
 - Your list of `outage_response` should always accumulate to `100%` in total
   otherwise the service will refuse to start.
