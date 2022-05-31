@@ -28,11 +28,11 @@ import argparse
 import random
 import gunicorn.app.base
 import datetime
-from time import sleep
 from time import time
 from croniter import croniter
 from .tools import Config
 from gevent import monkey
+from gevent import sleep
 
 monkey.patch_all()
 
@@ -54,19 +54,13 @@ def parse_arguments():
         "--port", type=int, dest="port", default=8080, help="The port to bind to."
     )
     parser.add_argument(
-        "--workers",
+        "--workers-connections",
         type=str,
-        dest="workers",
-        default=1,
-        help="The number of processes to run.",
+        dest="worker_connections",
+        default=1000,
+        help="The maximum number of simultaneous clients.",
     )
-    parser.add_argument(
-        "--threads",
-        type=str,
-        dest="threads",
-        default=10,
-        help="The number of threads per process.",
-    )
+
     parser.add_argument(
         "--plan",
         type=str,
@@ -74,7 +68,6 @@ def parse_arguments():
         required=True,
         help="The plan file to load.",
     )
-
     return parser.parse_args()
 
 
@@ -213,11 +206,10 @@ def main():
         app,
         {
             "bind": f"{args.address}:{args.port}",
-            "threads": args.threads,
-            "workers": args.workers,
             "accesslog": "-",
             "disable_redirect_access_to_syslog": True,
             "worker_class": "gevent",
+            "worker_connections": args.worker_connections,
         },
     ).run()
 
