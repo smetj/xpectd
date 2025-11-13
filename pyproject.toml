@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xpectd"
+version = "0.2.0"
+description = "A webservice with predictable outage behavior."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Jelle Smet", email = "development@smetj.net" }]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+]
+dependencies = [
+  "falcon==4.2.0",
+  "gunicorn==23.0.0",
+  "croniter==6.0.0",
+  "pyyaml==6.0.3",
+  "jsonschema==4.25.1",
+  "gevent==25.9.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "pycodestyle", "pyflakes", "black"]
+
+[project.scripts]
+xpectd = "xpectd:main"
+
+[project.urls]
+Homepage = "https://github.com/smetj/xpectd"
+Download = "https://github.com/smetj/xpectd/tarball/main"
+
+[tool.setuptools.packages.find]
+include = ["xpectd"]

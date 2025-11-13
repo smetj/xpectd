@@ -22,23 +22,23 @@
 #
 #
 
+import argparse
+import datetime
+import random
+from time import time
+
 import falcon
 import gunicorn
-import argparse
-import random
 import gunicorn.app.base
-import datetime
-from time import time
 from croniter import croniter
+from gevent import monkey, sleep
+
 from .tools import Config
-from gevent import monkey
-from gevent import sleep
 
 monkey.patch_all()
 
 
 def parse_arguments():
-
     parser = argparse.ArgumentParser(
         description="A webservice to simulate various outage scenarios.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -165,7 +165,6 @@ class ToggleOutage:
         self.disable = disable
 
     def on_post(self, req, resp, action):
-
         if action == "enable":
             self.enable()
             resp.media = {"status": "enabled"}
@@ -177,7 +176,6 @@ class ToggleOutage:
 
 
 def main():
-
     args = parse_arguments()
     config = Config(args.plan).load()
 

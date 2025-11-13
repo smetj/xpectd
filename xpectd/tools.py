@@ -77,12 +77,10 @@ SCHEMA = {
 
 class Config:
     def __init__(self, filename):
-
         self.filename = filename
         self.config = self.load()
 
     def load(self):
-
         with open(self.filename) as config:
             content = yaml.safe_load(config)
             validate(content, SCHEMA)
@@ -90,7 +88,6 @@ class Config:
             return content
 
     def validation(self, config):
-
         for scenario in config["scenarios"]:
             total_spread = sum(
                 [entry["percentage"] for entry in scenario["outage"]["response"]]
